@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        #imageContainer {
+            width: 100%;
+            height: auto;
+        }
+        #imageContainer img {
+            width: 100%;
+            height: auto;
+        }
+        .paletteColor {
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <form id="form1">
+        <input type="file" id="imageUpload" accept="image/*">
+        <input type="number" id="areaSize" min="1" placeholder="3" value="3">
+        <table id="palette">
+            <tr>
+                <td id="color-0" class="paletteColor"></td>
+                <td id="color-1" class="paletteColor"></td>
+                <td id="color-2" class="paletteColor"></td>
+                <td id="color-3" class="paletteColor"></td>
+                <td id="color-4" class="paletteColor"></td>
+                <td id="color-5" class="paletteColor"></td>
+                <td id="color-6" class="paletteColor"></td>
+                <td id="color-7" class="paletteColor"></td>
+            </tr>
+        </table>
+    </form>
+    <div id="imageContainer"></div>
+    <div id="hoveredColor" style="position: fixed; top: 0; right: 0; width: 50px; height: 50px;"></div>
+    <div id="averageColor" style="position: fixed; top: 60px; right: 0; width: 50px; height: 50px;"></div>
+    <script src="colorConvert.min.js"></script>
+    <script src="color-thief.min.js"></script>
+    <script>
+
+document.getElementById('imageUpload').addEventListener('change', function(e) {
+    var reader = new FileReader();
+    reader.onload = function(event) {
+        var img = new Image();
+        img.setAttribute('id', 'img');
+        img.onload = function() {
+            //document.getElementById("form1").style.display = "none";
+            document.getElementById('imageContainer').innerHTML = '';
+            document.getElementById('imageContainer').appendChild(img);
+
+            var canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            var context = canvas.getContext('2d', { willReadFrequently: true });
+            context.drawImage(img, 0, 0, img.width, img.height);
+
+
+            
+            var isDragging = false;
+            img.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                //e.preventDefault();
+            });
+
+            img.addEventListener('mouseup', function(e) {
+                isDragging = false;
+                rOsc.pause(0.5);
+            });
+
+            var rOsc = new Osc();
+            rOsc.start(0, 0, 0.01, 1000);
+            rOsc.pause(0);
+
+            rOsc.pause(0); // frequency, volume, attack time, filter frequency
+            for (var i = 0; i < 8; i++) {
+                ambOsc[i].pause(0);
+            }
+
+            img.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                var {rgb, hsl} = getColorData(context, e, this, rOsc);
+                var [frequency, volume, attack, filterF] = hsl2osc(hsl);
+                rOsc.update(frequency, volume, filterF); // frequency, volume, filter frequency
+            });
+
+            const colorThief = new ColorThief();
+            //const img = document.querySelector('img');
+
+            var domColor = colorThief.getColor(img);
+            var palette = colorThief.getPalette(img, 8);
+            for (var i = 0; i < palette.length; i++) {
+                document.getElementById('color-' + i).style.backgroundColor = 'rgb(' + palette[i][0] + ',' + palette[i][1] + ',' + palette[i][2] + ')';
+                var hslTmp = colorConvert.rgb2hsl(palette[i][0], palette[i][1], palette[i][2]);
+                var [frequency, volume, attack, filterF] = hsl2osc(hslTmp);
+                ambOsc[i].start(frequency, volume, attack, filterF);
+                ambOsc[i].setPan(Math.random() * 2 - 1);
+                ambOsc[i].update(frequency, volume/4, filterF);
+            }
+        }
+        img.src = event.target.result;
+    }
+    reader.readAsDataURL(e.target.files[0]);
+});
+
+
+function getColorData(context, e, img, rOsc) {
+                
+    var pixelData = context.getImageData(e.offsetX, e.offsetY, 1, 1).data;
+    
+    var areaSize = parseInt(document.getElementById('areaSize').value);
+    var totalR = 0, totalG = 0, totalB = 0, totalA = 0, totalPixels = 0;
+    for (var y = Math.max(0, e.offsetY - areaSize); y <= Math.min(img.height - 1, e.offsetY + areaSize); y++) {
+        for (var x = Math.max(0, e.offsetX - areaSize); x <= Math.min(img.width - 1, e.offsetX + areaSize); x++) {
+            var areaPixelData = context.getImageData(x, y, 1, 1).data;
+            totalR += areaPixelData[0];
+            totalG += areaPixelData[1];
+            totalB += areaPixelData[2];
+            totalA += areaPixelData[3];
+            totalPixels++;
+        }
+    }
+    var pixelColor = 'rgba(' + pixelData[0] + ',' + pixelData[1] + ',' + pixelData[2] + ',' + pixelData[3] + ')';
+    var averageColor = 'rgba(' + Math.round(totalR / totalPixels) + ',' + Math.round(totalG / totalPixels) + ',' + Math.round(totalB / totalPixels) + ',' + Math.round(totalA / totalPixels) + ')';
+    document.getElementById('hoveredColor').style.backgroundColor = pixelColor;
+    document.getElementById('averageColor').style.backgroundColor = averageColor;
+    var rgb = [parseInt(totalR / totalPixels), parseInt(totalG / totalPixels), parseInt(totalB / totalPixels)];
+    var cc = window.colorConvert;
+    var hsl = cc.rgb2hsl(totalR / totalPixels, totalG / totalPixels, totalB / totalPixels);
+    return({rgb: rgb, hsl: hsl});
+}
+
+function hsl2osc(hsl) {
+    const pitches = [16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87, 32.70];
+    var pitch = pitches[Math.round(hsl[0]/30)];
+    var octIndex = Math.floor((hsl[1]/25));
+    var oct = Math.pow(2, octIndex)*4*Math.sign(hsl[1]);
+    console.log(hsl);
+    console.log(pitch*oct + "\t"+ pitch + "\t" + hsl[2]/100);
+    return [pitch*oct, hsl[2]/100, 0.1, 10000];
+}
+
+class Osc {
+    constructor() {
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.filter = this.audioContext.createBiquadFilter();
+        this.gainNode = this.audioContext.createGain();
+        this.panNode = this.audioContext.createStereoPanner();
+        this.filter.connect(this.gainNode);
+        this.gainNode.connect(this.panNode);
+        this.panNode.connect(this.audioContext.destination);
+    }
+
+    setPan(pan) {
+        this.panNode.pan.setValueAtTime(pan, this.audioContext.currentTime);
+    }
+
+    start() {
+        this.oscillator = this.audioContext.createOscillator();
+        this.oscillator.connect(this.filter);
+        this.oscillator.start();
+    }
+
+    update(freq, vol, filterFreq) {
+        this.oscillator.frequency.linearRampToValueAtTime(freq, this.audioContext.currentTime);
+        this.frequency = freq;
+        this.gainNode.gain.linearRampToValueAtTime(vol, this.audioContext.currentTime);
+        this.volume = vol;
+        this.filter.frequency.linearRampToValueAtTime(filterFreq, this.audioContext.currentTime);
+        this.filterFrequency = filterFreq;
+        //this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
+        //this.gainNode.gain.linearRampToValueAtTime(this.volume, this.audioContext.currentTime + this.attackTime);
+    }
+
+    pause(decay) {
+        this.decay = decay;
+
+        this.gainNode.gain.cancelScheduledValues(this.audioContext.currentTime);
+        this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, this.audioContext.currentTime);
+        this.gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + this.decay);
+
+        //this.oscillator.stop(this.audioContext.currentTime + this.decay);
+        //this.oscillator = null; // set oscillator to null after stopping
+    }
+
+    stop(release) {
+        this.releaseTime = release;
+
+        this.gainNode.gain.cancelScheduledValues(this.audioContext.currentTime);
+        this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, this.audioContext.currentTime);
+        this.gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + this.releaseTime);
+
+        this.oscillator.stop(this.audioContext.currentTime + this.releaseTime);
+    }
+}
+
+var ambOsc = [];
+for (var i = 0; i < 8; i++) {
+    ambOsc[i] = new Osc();
+    ambOsc[i].start(0, 0, 0.01, 1000);
+    ambOsc[i].pause(0);
+}
+
+    </script>
+</body>
+</html>
