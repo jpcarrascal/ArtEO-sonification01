@@ -2,6 +2,12 @@
 <html>
 <head>
     <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            font-size: small;
+        }
         #imageContainer {
             width: 100%;
             height: auto;
@@ -11,36 +17,148 @@
             height: auto;
         }
         .paletteColor {
-            width: 20px;
-            height: 20px;
+            width: 30px;
+            height: 30px;
+        }
+
+        #tools {
+            position: fixed;
+            background-color: white;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <form id="form1">
-        <input type="file" id="imageUpload" accept="image/*">
-        <input type="number" id="areaSize" min="1" placeholder="3" value="3">
-        <table id="palette">
-            <tr>
-                <td id="color-0" class="paletteColor"></td>
-                <td id="color-1" class="paletteColor"></td>
-                <td id="color-2" class="paletteColor"></td>
-                <td id="color-3" class="paletteColor"></td>
-                <td id="color-4" class="paletteColor"></td>
-                <td id="color-5" class="paletteColor"></td>
-                <td id="color-6" class="paletteColor"></td>
-                <td id="color-7" class="paletteColor"></td>
-            </tr>
-        </table>
-    </form>
+    <div id="tools">
+        <form id="form1">
+            <input type="file" id="imageUpload" accept="image/*">
+            <!--
+            <select id="select-img">
+                <optgroup label="Agriculture">
+                    <option>Baja_California_Mexico.jpg</option>
+                    <option>Palm_oil_plantations.jpg</option>
+                    <option>Ries_crater_Germany.jpg</option>
+                    <option>South_Kalimantan_Borneo.jpg</option>
+                    <option>Hereford_Texas.jpg</option>
+                    <option>Rice_fields_Vietnam.jpg</option>
+                    <option>Sindh_Pakistan.jpg</option>
+                    <option>Washington_US.jpg</option>
+                    </optgroup>
+                    <optgroup label="Coastal Zones">
+                    <option>Abu_Dhabi.jpg</option>
+                    <option>English_Channel.jpg</option>
+                    <option>San_Francisco_Bay.jpg</option>
+                    <option>Barranquilla_Colombia.jpg</option>
+                    <option>Gulf_of_Kutch_India.jpg</option>
+                    <option>Scandinavian_snows_highlight_std.jpg</option>
+                    <option>Bouches-du-Rhone_France.jpg</option>
+                    <option>Gulf_of_Taranto_Italy.jpg</option>
+                    <option>Western_Pakistan.jpg</option>
+                    <option>Clarence_Strait_Australia.jpg</option>
+                    <option>Montevideo_Uruguay.jpg</option>
+                    </optgroup>
+                    <optgroup label="Deserts">
+                    <option>Namib_Desert.jpg</option>
+                    <option>Namib_Desert_pillars.jpg</option>
+                    <option>Rub_al_Khali_desert_highlight_std.jpg</option>
+                    </optgroup>
+                    <optgroup label="Glaciers">
+                    <option>Glacier_Bay_Alaska.jpg</option>
+                    <option>Northwest_Greenland.jpg</option>
+                    <option>Vatnajoekull_Iceland.jpg</option>
+                    <option>Melt_Ponds_in_West_Greenland.jpg</option>
+                    <option>Svalbard.jpg</option>
+                    </optgroup>
+                    <optgroup label="Lakes">
+                    <option>Alberta_Canada.jpg</option>
+                    <option>Lake_Balkhash_Kazakhastan.jpg</option>
+                    <option>Lake_Trasimeno_Italy.jpg</option>
+                    <option>Lake_Balaton_Hungary.jpg</option>
+                    <option>Lake_Chad_s_shrinking_waters.gif</option>
+                    <option>Utah_s_Great_Salt_Lake.jpg</option>
+                    </optgroup>
+                    <optgroup label="Marine">
+                    <option>Ari_Atoll_Maldives.jpg</option>
+                    <option>Patagonia.jpg</option>
+                    <option>Earth_from_Space_Blooms_in_the_Gulf_of_Finland.jpg</option>
+                    <option>Queensland_floods.jpg</option>
+                    <option>Great_Bahamas_Bank.jpg</option>
+                    <option>Singapore.jpg</option>
+                    <option>Irminger_Sea_ice_swirl.jpg</option>
+                    <option>Tarawa_Kiribati.jpg</option>
+                    <option>New_Zealand.jpg</option>
+                    </optgroup>
+                    <optgroup label="Mountains">
+                    <option>Flinders_Ranges_South_Australia.jpg</option>
+                    <option>Snowy_Pyrenees.jpg</option>
+                    <option>Ulan_Bator_Mongolia.jpg</option>
+                    <option>Peruvian_Andes.jpg</option>
+                    <option>The_Alps.jpg</option>
+                    </optgroup>
+                    <optgroup label="Rivers">
+                    <option>Amazon_River.jpg</option>
+                    <option>Earth_from_Space_Bentiu_South_Sudan.jpg</option>
+                    <option>Meeting_of_waters.jpg</option>
+                    <option>Cambodian_rivers.jpg</option>
+                    <option>Ganges_dazzling_delta_pillars.jpg</option>
+                    <option>Mississippi_River.jpg</option>
+                    <option>Colourful_Queensland_Australia.jpg</option>
+                    <option>Lena_River_Delta.jpg</option>
+                    <option>Nushagak_Bay_Alaska.jpeg</option>
+                    </optgroup>
+                    <optgroup label="Urban">
+                    <option>Barcelona_Spain.jpg</option>
+                    <option>Earth_from_Space_New_York.jpg</option>
+                    <option>New_York_City.jpg</option>
+                    <option>Bonn_Germany.jpg</option>
+                    <option>Milan_Italy.jpg</option>
+                    <option>Santiago_Chile.jpg</option>
+                    <option>Brussels.jpg</option>
+                    <option>Nairobi_Kenya.jpg</option>
+                    <option>Tokyo_Bay_Japan.jpg</option>
+                    </optgroup>
+                    <optgroup label="Volcanoes">
+                    <option>Castelli_Romani_Italy.jpg</option>
+                    <option>East_Bali_Indonesia.jpg</option>
+                    <option>Mount_Aso_Japan.jpg</option>
+                    <option>Mount_Fuji_Japan.jpg</option>
+                    </optgroup>
+
+            </select>
+            -->
+            Color area size: <input type="number" id="areaSize" min="1" placeholder="1" value="1">
+            <table id="palette">
+                <tr>
+                    <td id="color-0" class="paletteColor"></td>
+                    <td id="color-1" class="paletteColor"></td>
+                    <td id="color-2" class="paletteColor"></td>
+                    <td id="color-3" class="paletteColor"></td>
+                    <td id="color-4" class="paletteColor"></td>
+                    <td id="color-5" class="paletteColor"></td>
+                    <td id="color-6" class="paletteColor"></td>
+                    <td id="color-7" class="paletteColor"></td>
+                    <td class="paletteColor"></td>
+                    <td class="paletteColor"></td>
+                    <td id="hoveredColor" class="paletteColor"></td>
+                    <td id="averageColor" class="paletteColor"></td>
+                </tr>
+            </table>
+        </form>
+    </div>
     <div id="imageContainer"></div>
+    <!--
     <div id="hoveredColor" style="position: fixed; top: 0; right: 0; width: 50px; height: 50px;"></div>
     <div id="averageColor" style="position: fixed; top: 60px; right: 0; width: 50px; height: 50px;"></div>
+    -->
     <script src="colorConvert.min.js"></script>
     <script src="color-thief.min.js"></script>
     <script>
 
 document.getElementById('imageUpload').addEventListener('change', function(e) {
+    loadImage(e);
+});
+
+function loadImage(e) {
     var reader = new FileReader();
     reader.onload = function(event) {
         var img = new Image();
@@ -96,15 +214,23 @@ document.getElementById('imageUpload').addEventListener('change', function(e) {
                 var hslTmp = colorConvert.rgb2hsl(palette[i][0], palette[i][1], palette[i][2]);
                 var [frequency, volume, attack, filterF] = hsl2osc(hslTmp);
                 ambOsc[i].start(frequency, volume, attack, filterF);
-                ambOsc[i].setPan(Math.random() * 2 - 1);
-                ambOsc[i].update(frequency, volume/4, filterF);
+                //ambOsc[i].setPan(Math.random() * 2 - 1);
+                if(i%2 == 0)
+                    ambOsc[i].setPan(mapNumber(i, 0, 7, 0, 1));
+                else
+                    ambOsc[i].setPan(mapNumber(i, 0, 7, 0, -1));
+                ambOsc[i].update(frequency, volume/8, filterF);
             }
         }
         img.src = event.target.result;
     }
     reader.readAsDataURL(e.target.files[0]);
-});
+}
 
+
+function mapNumber(number, inMin, inMax, outMin, outMax) {
+    return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+}
 
 function getColorData(context, e, img, rOsc) {
                 
@@ -159,16 +285,17 @@ class Osc {
 
     start() {
         this.oscillator = this.audioContext.createOscillator();
+        
         this.oscillator.connect(this.filter);
         this.oscillator.start();
     }
 
     update(freq, vol, filterFreq) {
-        this.oscillator.frequency.linearRampToValueAtTime(freq, this.audioContext.currentTime);
+        this.oscillator.frequency.linearRampToValueAtTime(freq, this.audioContext.currentTime+0.05);
         this.frequency = freq;
-        this.gainNode.gain.linearRampToValueAtTime(vol, this.audioContext.currentTime);
+        this.gainNode.gain.linearRampToValueAtTime(vol, this.audioContext.currentTime+0.05);
         this.volume = vol;
-        this.filter.frequency.linearRampToValueAtTime(filterFreq, this.audioContext.currentTime);
+        this.filter.frequency.linearRampToValueAtTime(filterFreq, this.audioContext.currentTime+0.05);
         this.filterFrequency = filterFreq;
         //this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
         //this.gainNode.gain.linearRampToValueAtTime(this.volume, this.audioContext.currentTime + this.attackTime);
