@@ -28,7 +28,10 @@
             height: 30px;
         }
         .picker {
-            border-radius: 15px;
+            border-radius: 30px;
+            text-align: center;
+            color: white;
+            border: 2px solid lightgrey;
         }
         #tools {
             position: fixed;
@@ -41,9 +44,9 @@
     <div id="tools">
         <form id="form1">
             <input type="file" id="imageUpload" accept="image/*">
-            <!--
-            <select id="select-img">
-                <optgroup label="Agriculture">
+            <!---
+            Select image: <select id="select-img">
+                <optgroup class="image-type" label="Agriculture">
                     <option>Baja_California_Mexico.jpg</option>
                     <option>Palm_oil_plantations.jpg</option>
                     <option>Ries_crater_Germany.jpg</option>
@@ -53,7 +56,7 @@
                     <option>Sindh_Pakistan.jpg</option>
                     <option>Washington_US.jpg</option>
                     </optgroup>
-                    <optgroup label="Coastal Zones">
+                    <optgroup class="image-type" label="Coastal Zones">
                     <option>Abu_Dhabi.jpg</option>
                     <option>English_Channel.jpg</option>
                     <option>San_Francisco_Bay.jpg</option>
@@ -66,19 +69,19 @@
                     <option>Clarence_Strait_Australia.jpg</option>
                     <option>Montevideo_Uruguay.jpg</option>
                     </optgroup>
-                    <optgroup label="Deserts">
+                    <optgroup class="image-type" label="Deserts">
                     <option>Namib_Desert.jpg</option>
                     <option>Namib_Desert_pillars.jpg</option>
                     <option>Rub_al_Khali_desert_highlight_std.jpg</option>
                     </optgroup>
-                    <optgroup label="Glaciers">
+                    <optgroup class="image-type" label="Glaciers">
                     <option>Glacier_Bay_Alaska.jpg</option>
                     <option>Northwest_Greenland.jpg</option>
                     <option>Vatnajoekull_Iceland.jpg</option>
                     <option>Melt_Ponds_in_West_Greenland.jpg</option>
                     <option>Svalbard.jpg</option>
                     </optgroup>
-                    <optgroup label="Lakes">
+                    <optgroup class="image-type" label="Lakes">
                     <option>Alberta_Canada.jpg</option>
                     <option>Lake_Balkhash_Kazakhastan.jpg</option>
                     <option>Lake_Trasimeno_Italy.jpg</option>
@@ -86,7 +89,7 @@
                     <option>Lake_Chad_s_shrinking_waters.gif</option>
                     <option>Utah_s_Great_Salt_Lake.jpg</option>
                     </optgroup>
-                    <optgroup label="Marine">
+                    <optgroup class="image-type" label="Marine">
                     <option>Ari_Atoll_Maldives.jpg</option>
                     <option>Patagonia.jpg</option>
                     <option>Earth_from_Space_Blooms_in_the_Gulf_of_Finland.jpg</option>
@@ -97,14 +100,14 @@
                     <option>Tarawa_Kiribati.jpg</option>
                     <option>New_Zealand.jpg</option>
                     </optgroup>
-                    <optgroup label="Mountains">
+                    <optgroup class="image-type" label="Mountains">
                     <option>Flinders_Ranges_South_Australia.jpg</option>
                     <option>Snowy_Pyrenees.jpg</option>
                     <option>Ulan_Bator_Mongolia.jpg</option>
                     <option>Peruvian_Andes.jpg</option>
                     <option>The_Alps.jpg</option>
                     </optgroup>
-                    <optgroup label="Rivers">
+                    <optgroup class="image-type" label="Rivers">
                     <option>Amazon_River.jpg</option>
                     <option>Earth_from_Space_Bentiu_South_Sudan.jpg</option>
                     <option>Meeting_of_waters.jpg</option>
@@ -115,7 +118,7 @@
                     <option>Lena_River_Delta.jpg</option>
                     <option>Nushagak_Bay_Alaska.jpeg</option>
                     </optgroup>
-                    <optgroup label="Urban">
+                    <optgroup class="image-type" label="Urban">
                     <option>Barcelona_Spain.jpg</option>
                     <option>Earth_from_Space_New_York.jpg</option>
                     <option>New_York_City.jpg</option>
@@ -126,7 +129,7 @@
                     <option>Nairobi_Kenya.jpg</option>
                     <option>Tokyo_Bay_Japan.jpg</option>
                     </optgroup>
-                    <optgroup label="Volcanoes">
+                    <optgroup class="image-type" label="Volcanoes">
                     <option>Castelli_Romani_Italy.jpg</option>
                     <option>East_Bali_Indonesia.jpg</option>
                     <option>Mount_Aso_Japan.jpg</option>
@@ -135,12 +138,13 @@
 
             </select>
             -->
-            Color area size: <input type="number" id="areaSize" min="1" placeholder="1" value="1">
+            Avg area size: <input type="number" id="areaSize" min="1" placeholder="1" value="1">
             <div id="palette-container">
+                Scanned color:
                 <table id="palette">
                     <tr>
-                        <td id="hoveredColor" class="paletteColor picker"></td>
-                        <td id="averageColor" class="paletteColor picker"></td>
+                        <td id="hoveredColor" class="paletteColor picker">Pt</td>
+                        <td id="averageColor" class="paletteColor picker">Avg</td>
                     </tr>
                 </table>
 
@@ -168,20 +172,30 @@
 var numWaves = 8;
 let row = document.getElementById("palette-row");
 
-// Determine the starting index for the new cells
-// Create and insert new cells
 for (let i = 0; i < numWaves; i++) {
     let cell = row.insertCell(-1);
     cell.className = "paletteColor";
     cell.id = "color-" + (i);
 }
 
+// Get all optgroups
+let optgroups = document.querySelectorAll('.image-type');
+
+// Iterate over each optgroup
+for (let i = 0; i < optgroups.length; i++) {
+    let label = optgroups[i].label;
+
+    // Get all options within the current optgroup
+    let options = optgroups[i].getElementsByTagName('option');
+
+    // Iterate over each option
+    for (let j = 0; j < options.length; j++) {
+        // Set the value attribute
+        options[j].value = "images/ArtEO/" + label + "/" + options[j].innerText;
+    }
+}
+
 document.getElementById('imageUpload').addEventListener('change', function(e) {
-    loadImage(e);
-});
-
-
-function loadImage(e) {
     var reader = new FileReader();
     reader.onload = function(event) {
         var img = new Image();
@@ -210,7 +224,9 @@ function loadImage(e) {
                 rOsc.volume.rampTo(-100, 2);
             });
 
-            var rOsc = new Tone.Oscillator(0, "sine").toDestination().start();
+            const reverb = new Tone.Reverb().toDestination();
+            reverb.wet.value = 0.5;
+            var rOsc = new Tone.Oscillator(0, "triangle4").connect(reverb).start();
 
             img.addEventListener('mousemove', function(e) {
                 if (!isDragging) return;
@@ -218,7 +234,7 @@ function loadImage(e) {
                 var {rgb, hsl} = getColorData(context, e, this);
                 var [frequency, volume, attack, filterF] = hsl2osc(hsl);
                 rOsc.frequency.rampTo(frequency);
-                rOsc.volume.rampTo( 20*Math.log10(volume), 0.5 );
+                rOsc.volume.rampTo( 20*Math.log10(volume/2), 0.1 );
             });
 
             const colorThief = new ColorThief();
@@ -231,15 +247,15 @@ function loadImage(e) {
                 document.getElementById('color-' + i).style.backgroundColor = 'rgb(' + palette[i][0] + ',' + palette[i][1] + ',' + palette[i][2] + ')';
                 var hslTmp = colorConvert.rgb2hsl(palette[i][0], palette[i][1], palette[i][2]);
                 var [frequency, volume, attack, filterF] = hsl2osc(hslTmp);
-                ambOsc[i].frequency.value = frequency;
+                ambOsc[i].frequency.value = frequency/2;
                 ambOsc[i].volume.rampTo( 20*Math.log10(volume/(numWaves*1.5)) , 2) ;
-                ambOsc[i].toDestination().start();
+                ambOsc[i].start();
             }
         }
         img.src = event.target.result;
     }
     reader.readAsDataURL(e.target.files[0]);
-}
+});
 
 
 function mapNumber(number, inMin, inMax, outMin, outMax) {
@@ -282,13 +298,13 @@ function hsl2osc(hsl) {
 
 var ambOsc = [];
 for (var i = 0; i < numWaves; i++) {
-	const panner = new Tone.Panner(1).toDestination();
-    if(i%2 == 0)
-        panner.pan.value = mapNumber(i, 0, (numWaves-1), 0, 1);
-    else
-        panner.pan.value = mapNumber(i, 0, (numWaves-1), 0, -1);
-	ambOsc[i] = new Tone.Oscillator(0, "sine").connect(panner);
+    const tremolo = new Tone.Tremolo(9, 1).toDestination().start();    
+    tremolo.spread.value = 180;
+    tremolo.frequency.value = 0.01*(Math.pow(2, i));
+    console.log(tremolo.frequency.value);
+	ambOsc[i] = new Tone.Oscillator(0, "triangle8").connect(tremolo);
     ambOsc[i].volume.value = -100;
+
 
 /*
     if(i%2 == 0)
