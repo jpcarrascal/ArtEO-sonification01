@@ -16,11 +16,20 @@
             width: 100%;
             height: auto;
         }
+        #palette-container {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+        }
         .paletteColor {
             width: 30px;
             height: 30px;
         }
-
+        .picker {
+            border-radius: 15px;
+        }
         #tools {
             position: fixed;
             background-color: white;
@@ -127,36 +136,50 @@
             </select>
             -->
             Color area size: <input type="number" id="areaSize" min="1" placeholder="1" value="1">
-            <table id="palette">
-                <tr>
-                    <td id="color-0" class="paletteColor"></td>
-                    <td id="color-1" class="paletteColor"></td>
-                    <td id="color-2" class="paletteColor"></td>
-                    <td id="color-3" class="paletteColor"></td>
-                    <td id="color-4" class="paletteColor"></td>
-                    <td id="color-5" class="paletteColor"></td>
-                    <td id="color-6" class="paletteColor"></td>
-                    <td id="color-7" class="paletteColor"></td>
-                    <td class="paletteColor"></td>
-                    <td class="paletteColor"></td>
-                    <td id="hoveredColor" class="paletteColor"></td>
-                    <td id="averageColor" class="paletteColor"></td>
-                </tr>
-            </table>
+            <div id="palette-container">
+                <table id="palette">
+                    <tr>
+                        <td id="hoveredColor" class="paletteColor picker"></td>
+                        <td id="averageColor" class="paletteColor picker"></td>
+                    </tr>
+                </table>
+
+                <table id="palette">
+                    <tr id="palette-row">
+                        <td class="paletteColor"></td>
+                        <td class="paletteColor"></td>
+                        <td class="paletteColor"></td>
+                        <td class="paletteColor"></td>
+                    </tr>
+                </table>
+            </div>
         </form>
     </div>
     <div id="imageContainer"></div>
     <!--
-    <div id="hoveredColor" style="position: fixed; top: 0; right: 0; width: 50px; height: 50px;"></div>
-    <div id="averageColor" style="position: fixed; top: 60px; right: 0; width: 50px; height: 50px;"></div>
+    <div id="hoveredColor" style="position: fixed; top: 0; left: 0; width: 50px; height: 50px;"></div>
+    <div id="averageColor" style="position: fixed; top: 60px; left: 0; width: 50px; height: 50px;"></div>
     -->
     <script src="colorConvert.min.js"></script>
     <script src="color-thief.min.js"></script>
+    <script src="Tone.js"></script>
     <script>
+
+var numWaves = 8;
+let row = document.getElementById("palette-row");
+
+// Determine the starting index for the new cells
+// Create and insert new cells
+for (let i = 0; i < numWaves; i++) {
+    let cell = row.insertCell(-1);
+    cell.className = "paletteColor";
+    cell.id = "color-" + (i);
+}
 
 document.getElementById('imageUpload').addEventListener('change', function(e) {
     loadImage(e);
 });
+
 
 function loadImage(e) {
     var reader = new FileReader();
@@ -184,42 +207,33 @@ function loadImage(e) {
 
             img.addEventListener('mouseup', function(e) {
                 isDragging = false;
-                rOsc.pause(0.5);
+                rOsc.volume.rampTo(-100, 2);
             });
 
-            var rOsc = new Osc();
-            rOsc.start(0, 0, 0.01, 1000);
-            rOsc.pause(0);
-
-            rOsc.pause(0); // frequency, volume, attack time, filter frequency
-            for (var i = 0; i < 8; i++) {
-                ambOsc[i].pause(0);
-            }
+            var rOsc = new Tone.Oscillator(0, "sine").toDestination().start();
 
             img.addEventListener('mousemove', function(e) {
                 if (!isDragging) return;
                 e.preventDefault();
-                var {rgb, hsl} = getColorData(context, e, this, rOsc);
+                var {rgb, hsl} = getColorData(context, e, this);
                 var [frequency, volume, attack, filterF] = hsl2osc(hsl);
-                rOsc.update(frequency, volume, filterF); // frequency, volume, filter frequency
+                rOsc.frequency.rampTo(frequency);
+                rOsc.volume.rampTo( 20*Math.log10(volume), 0.5 );
             });
 
             const colorThief = new ColorThief();
             //const img = document.querySelector('img');
 
             var domColor = colorThief.getColor(img);
-            var palette = colorThief.getPalette(img, 8);
+            var palette = colorThief.getPalette(img, numWaves);
+            console.log(palette.length);
             for (var i = 0; i < palette.length; i++) {
                 document.getElementById('color-' + i).style.backgroundColor = 'rgb(' + palette[i][0] + ',' + palette[i][1] + ',' + palette[i][2] + ')';
                 var hslTmp = colorConvert.rgb2hsl(palette[i][0], palette[i][1], palette[i][2]);
                 var [frequency, volume, attack, filterF] = hsl2osc(hslTmp);
-                ambOsc[i].start(frequency, volume, attack, filterF);
-                //ambOsc[i].setPan(Math.random() * 2 - 1);
-                if(i%2 == 0)
-                    ambOsc[i].setPan(mapNumber(i, 0, 7, 0, 1));
-                else
-                    ambOsc[i].setPan(mapNumber(i, 0, 7, 0, -1));
-                ambOsc[i].update(frequency, volume/8, filterF);
+                ambOsc[i].frequency.value = frequency;
+                ambOsc[i].volume.rampTo( 20*Math.log10(volume/(numWaves*1.5)) , 2) ;
+                ambOsc[i].toDestination().start();
             }
         }
         img.src = event.target.result;
@@ -232,7 +246,7 @@ function mapNumber(number, inMin, inMax, outMin, outMax) {
     return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 }
 
-function getColorData(context, e, img, rOsc) {
+function getColorData(context, e, img) {
                 
     var pixelData = context.getImageData(e.offsetX, e.offsetY, 1, 1).data;
     
@@ -263,71 +277,26 @@ function hsl2osc(hsl) {
     var pitch = pitches[Math.round(hsl[0]/30)];
     var octIndex = Math.floor((hsl[1]/25));
     var oct = Math.pow(2, octIndex)*4*Math.sign(hsl[1]);
-    console.log(hsl);
-    console.log(pitch*oct + "\t"+ pitch + "\t" + hsl[2]/100);
     return [pitch*oct, hsl[2]/100, 0.1, 10000];
 }
 
-class Osc {
-    constructor() {
-        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        this.filter = this.audioContext.createBiquadFilter();
-        this.gainNode = this.audioContext.createGain();
-        this.panNode = this.audioContext.createStereoPanner();
-        this.filter.connect(this.gainNode);
-        this.gainNode.connect(this.panNode);
-        this.panNode.connect(this.audioContext.destination);
-    }
-
-    setPan(pan) {
-        this.panNode.pan.setValueAtTime(pan, this.audioContext.currentTime);
-    }
-
-    start() {
-        this.oscillator = this.audioContext.createOscillator();
-        
-        this.oscillator.connect(this.filter);
-        this.oscillator.start();
-    }
-
-    update(freq, vol, filterFreq) {
-        this.oscillator.frequency.linearRampToValueAtTime(freq, this.audioContext.currentTime+0.05);
-        this.frequency = freq;
-        this.gainNode.gain.linearRampToValueAtTime(vol, this.audioContext.currentTime+0.05);
-        this.volume = vol;
-        this.filter.frequency.linearRampToValueAtTime(filterFreq, this.audioContext.currentTime+0.05);
-        this.filterFrequency = filterFreq;
-        //this.gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-        //this.gainNode.gain.linearRampToValueAtTime(this.volume, this.audioContext.currentTime + this.attackTime);
-    }
-
-    pause(decay) {
-        this.decay = decay;
-
-        this.gainNode.gain.cancelScheduledValues(this.audioContext.currentTime);
-        this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, this.audioContext.currentTime);
-        this.gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + this.decay);
-
-        //this.oscillator.stop(this.audioContext.currentTime + this.decay);
-        //this.oscillator = null; // set oscillator to null after stopping
-    }
-
-    stop(release) {
-        this.releaseTime = release;
-
-        this.gainNode.gain.cancelScheduledValues(this.audioContext.currentTime);
-        this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, this.audioContext.currentTime);
-        this.gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + this.releaseTime);
-
-        this.oscillator.stop(this.audioContext.currentTime + this.releaseTime);
-    }
-}
-
 var ambOsc = [];
-for (var i = 0; i < 8; i++) {
-    ambOsc[i] = new Osc();
-    ambOsc[i].start(0, 0, 0.01, 1000);
-    ambOsc[i].pause(0);
+for (var i = 0; i < numWaves; i++) {
+	const panner = new Tone.Panner(1).toDestination();
+    if(i%2 == 0)
+        panner.pan.value = mapNumber(i, 0, (numWaves-1), 0, 1);
+    else
+        panner.pan.value = mapNumber(i, 0, (numWaves-1), 0, -1);
+	ambOsc[i] = new Tone.Oscillator(0, "sine").connect(panner);
+    ambOsc[i].volume.value = -100;
+
+/*
+    if(i%2 == 0)
+        ambOsc[i].setPan(mapNumber(i, 0, 7, 0, 1));
+    else
+        ambOsc[i].setPan(mapNumber(i, 0, 7, 0, -1));
+*/
+
 }
 
     </script>
