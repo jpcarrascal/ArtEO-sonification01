@@ -3,18 +3,26 @@
 <head>
     <style>
         body {
+            top: 0;
+            bottom: 0;
             margin: 0;
             padding: 0;
+            width: 100%;
+            height: 100%;
             font-family: Arial, sans-serif;
             font-size: small;
+            background-color: #f0f0f0;
         }
         #imageContainer {
+            position: relative;
+            top: 80px;
             width: 100%;
             height: auto;
         }
-        #imageContainer img {
+        #img {
             width: 100%;
             height: auto;
+            z-index: 1;
         }
         #palette-container {
             display: flex;
@@ -27,7 +35,7 @@
             width: 30px;
             height: 30px;
         }
-        .picker {
+        .pickers {
             border-radius: 30px;
             text-align: center;
             color: white;
@@ -37,10 +45,20 @@
             position: fixed;
             background-color: white;
             width: 100%;
+            z-index: 2;
+        }
+        #picker {
+            display: none;
+            position : absolute;
+            left : 100px;
+            top : 200px;
+            z-index: 10;
+            border-color: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
 <body>
+    <div id="picker" class="paletteColor pickers"></div>
     <div id="tools">
         <form id="form1">
             <input type="file" id="imageUpload" accept="image/*">
@@ -143,8 +161,8 @@
                 Scanned color:
                 <table id="palette">
                     <tr>
-                        <td id="hoveredColor" class="paletteColor picker">Pt</td>
-                        <td id="averageColor" class="paletteColor picker">Avg</td>
+                        <td id="hoveredColor" class="paletteColor pickers">Pt</td>
+                        <td id="averageColor" class="paletteColor pickers">Avg</td>
                     </tr>
                 </table>
 
@@ -159,7 +177,8 @@
             </div>
         </form>
     </div>
-    <div id="imageContainer"></div>
+    <div id="imageContainer">
+    </div>
     <!--
     <div id="hoveredColor" style="position: fixed; top: 0; left: 0; width: 50px; height: 50px;"></div>
     <div id="averageColor" style="position: fixed; top: 60px; left: 0; width: 50px; height: 50px;"></div>
@@ -170,8 +189,10 @@
     <script>
 
 var numWaves = 8;
-let row = document.getElementById("palette-row");
+var offset = [0, 0];
+var picker = document.getElementById('picker');
 
+let row = document.getElementById("palette-row");
 for (let i = 0; i < numWaves; i++) {
     let cell = row.insertCell(-1);
     cell.className = "paletteColor";
@@ -195,6 +216,17 @@ for (let i = 0; i < optgroups.length; i++) {
     }
 }
 
+document.body.addEventListener('mousemove', function(e) {
+    e.preventDefault();
+});
+
+document.getElementById('areaSize').addEventListener('change', function(e) {
+    var areaSize = parseInt(this.value);
+    console.log(areaSize);
+    //picker.style.width = areaSize + "px";
+    //picker.style.height = areaSize + "px";
+}); 
+
 document.getElementById('imageUpload').addEventListener('change', function(e) {
     var reader = new FileReader();
     reader.onload = function(event) {
@@ -216,11 +248,19 @@ document.getElementById('imageUpload').addEventListener('change', function(e) {
             var isDragging = false;
             img.addEventListener('mousedown', function(e) {
                 isDragging = true;
-                //e.preventDefault();
+                //picker.style.display = "block";
+                img.style.cursor  = "crosshair";
+                pickerPosition(e);
             });
 
             img.addEventListener('mouseup', function(e) {
                 isDragging = false;
+                rOsc.volume.rampTo(-100, 2);
+                //picker.style.display = "none";
+                img.style.cursor = "auto";
+            });
+
+            img.addEventListener("mouseleave", function(e) {
                 rOsc.volume.rampTo(-100, 2);
             });
 
@@ -235,6 +275,13 @@ document.getElementById('imageUpload').addEventListener('change', function(e) {
                 var [frequency, volume, attack, filterF] = hsl2osc(hsl);
                 rOsc.frequency.rampTo(frequency);
                 rOsc.volume.rampTo( 20*Math.log10(volume/2), 0.1 );
+                pickerPosition(e);
+                console.log(this.offsetTop);
+            });
+
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                
             });
 
             const colorThief = new ColorThief();
@@ -242,7 +289,6 @@ document.getElementById('imageUpload').addEventListener('change', function(e) {
 
             var domColor = colorThief.getColor(img);
             var palette = colorThief.getPalette(img, numWaves);
-            console.log(palette.length);
             for (var i = 0; i < palette.length; i++) {
                 document.getElementById('color-' + i).style.backgroundColor = 'rgb(' + palette[i][0] + ',' + palette[i][1] + ',' + palette[i][2] + ')';
                 var hslTmp = colorConvert.rgb2hsl(palette[i][0], palette[i][1], palette[i][2]);
@@ -257,6 +303,12 @@ document.getElementById('imageUpload').addEventListener('change', function(e) {
     reader.readAsDataURL(e.target.files[0]);
 });
 
+function pickerPosition(e) {
+    var x = e.offsetX;
+    var y = e.offsetY;
+    picker.style.left = (x) + 'px';
+    picker.style.top  = (y) + 'px';
+}
 
 function mapNumber(number, inMin, inMax, outMin, outMax) {
     return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
@@ -282,6 +334,7 @@ function getColorData(context, e, img) {
     var averageColor = 'rgba(' + Math.round(totalR / totalPixels) + ',' + Math.round(totalG / totalPixels) + ',' + Math.round(totalB / totalPixels) + ',' + Math.round(totalA / totalPixels) + ')';
     document.getElementById('hoveredColor').style.backgroundColor = pixelColor;
     document.getElementById('averageColor').style.backgroundColor = averageColor;
+    document.getElementById('picker').style.backgroundColor = averageColor;
     var rgb = [parseInt(totalR / totalPixels), parseInt(totalG / totalPixels), parseInt(totalB / totalPixels)];
     var cc = window.colorConvert;
     var hsl = cc.rgb2hsl(totalR / totalPixels, totalG / totalPixels, totalB / totalPixels);
@@ -301,18 +354,8 @@ for (var i = 0; i < numWaves; i++) {
     const tremolo = new Tone.Tremolo(9, 1).toDestination().start();    
     tremolo.spread.value = 180;
     tremolo.frequency.value = 0.01*(Math.pow(2, i));
-    console.log(tremolo.frequency.value);
 	ambOsc[i] = new Tone.Oscillator(0, "triangle8").connect(tremolo);
     ambOsc[i].volume.value = -100;
-
-
-/*
-    if(i%2 == 0)
-        ambOsc[i].setPan(mapNumber(i, 0, 7, 0, 1));
-    else
-        ambOsc[i].setPan(mapNumber(i, 0, 7, 0, -1));
-*/
-
 }
 
     </script>
