@@ -11,7 +11,7 @@
             height: 100%;
             font-family: Arial, sans-serif;
             font-size: small;
-            background-color: #f0f0f0;
+            background-color: #333;
         }
         #imageContainer {
             position: relative;
@@ -43,7 +43,8 @@
         }
         #tools {
             position: fixed;
-            background-color: white;
+            background-color: #222;
+            color: #EEE;
             width: 100%;
             z-index: 2;
         }
@@ -247,6 +248,7 @@ document.getElementById('imageUpload').addEventListener('change', function(e) {
             
             var isDragging = false;
             img.addEventListener('mousedown', function(e) {
+                e.preventDefault();
                 isDragging = true;
                 //picker.style.display = "block";
                 img.style.cursor  = "crosshair";
