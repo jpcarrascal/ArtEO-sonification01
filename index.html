@@ -56,11 +56,75 @@
             z-index: 10;
             border-color: rgba(255, 255, 255, 0.5);
         }
+
+        #form1 {
+            display: inline;
+        }
+
+        .help-popup {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .help-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover, .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
+    <div id="helpPopup" class="help-popup">
+        <div class="help-content">
+            <span id="closePopup" class="close-button">&times;</span>
+            <p>
+                <h4>About SynthEO</h4>
+                SynthEO is an image sonifier, meant to be used with images from <a href="https://www.arteo.earth/" target="_blank">ArtEO</a>.
+                Upon image load, a palette of its 8 most common colors is extracted, and each color is assigned a sine wave oscillator to create a soundscape, a "sound signature" for the image. You can also drag the cursor over the image to "play it".
+            </p>
+            <p>
+                <h4>Color to sound mapping (simplified)</h4>
+                Colors are transformed into the HSL space. The frequency of the oscillator is determined by the hue of the color (hue = note, saturation = octave),
+                and the volume by the lightness.
+            </p>
+            <p>
+                <h4>Credits</h4>
+                Supported by ArtEO / <a href="https://www.arteo.earth/" target="_blank">www.arteo.earth</a>
+                <br/>
+                Developed by JP Carrascal /  <a href="https://www.jpcarrascal.com">www.jpcarrascal.com</a>
+                <br/>
+                Copyright: JP Carrascal
+            </p>
+            
+        </div>
+    </div>
+
     <div id="picker" class="paletteColor pickers"></div>
     <div id="tools">
+        <button id="showHelp">Help/About</button>
         <form id="form1">
             <input type="file" id="imageUpload" accept="image/*">
             <!---
@@ -359,6 +423,29 @@ for (var i = 0; i < numWaves; i++) {
 	ambOsc[i] = new Tone.Oscillator(0, "triangle8").connect(tremolo);
     ambOsc[i].volume.value = -100;
 }
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const helpPopup = document.getElementById('helpPopup');
+    const showHelpButton = document.getElementById('showHelp');
+    const closePopupButton = document.getElementById('closePopup');
+
+    function showHelp() {
+        helpPopup.style.display = 'block';
+    }
+
+    function hideHelp() {
+        helpPopup.style.display = 'none';
+    }
+
+    showHelpButton.addEventListener('click', showHelp);
+    closePopupButton.addEventListener('click', hideHelp);
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            hideHelp();
+        }
+    });
+});
 
     </script>
 </body>
