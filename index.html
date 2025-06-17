@@ -1,119 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        body {
-            top: 0;
-            bottom: 0;
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            font-family: Arial, sans-serif;
-            font-size: small;
-            background-color: #333;
-        }
-        #imageContainer {
-            position: relative;
-            top: 80px;
-            width: 100%;
-            height: auto;
-        }
-        #img {
-            width: 100%;
-            height: auto;
-            z-index: 1;
-        }
-        #palette-container {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            margin: 10px;
-        }
-        .paletteColor {
-            width: 30px;
-            height: 30px;
-        }
-        .pickers {
-            border-radius: 30px;
-            text-align: center;
-            color: white;
-            border: 2px solid lightgrey;
-        }
-        #tools {
-            position: fixed;
-            background-color: #222;
-            color: #EEE;
-            width: 100%;
-            z-index: 2;
-        }
-        #picker {
-            display: none;
-            position : absolute;
-            left : 100px;
-            top : 200px;
-            z-index: 10;
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        #form1 {
-            display: inline;
-        }
-
-        .help-popup {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.5);
-        }
-
-        .help-content {
-            background-color: #000;
-            margin: 10% auto; /* 15% auto; */
-            padding: 20px;
-            border: 1px solid #888;
-            color: #CCC;
-            width: 80%;
-            max-width: 600px;
-        }
-
-        .help-popup a:link {
-            color: rgb(0, 119, 204);
-        }
-
-        .help-popup a:visited {
-            color: rgb(0, 119, 204);
-        }
-
-        .close-button {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close-button:hover, .close-button:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        #arteo-logo {
-            width: 80px;
-            float: right;
-            height: auto;
-            margin: -30px;
-            margin-right: 15px;
-            display: block;
-        }
-
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="helpPopup" class="help-popup">
@@ -143,6 +34,8 @@
                 <br/>
                 Developed by JP Carrascal /  <a href="https://www.jpcarrascal.com">www.jpcarrascal.com</a>
                 <br/>
+                Additional design by Tom DeMajo <a href="//www.biomecollective.com/" target="_blank">www.biomecollective.com</a>
+                <br/>
                 Copyright: JP Carrascal
             </p>
             
@@ -154,101 +47,66 @@
         <button id="showHelp">Help/About</button>
         <form id="form1">
             <input type="file" id="imageUpload" accept="image/*">
-            <!---
             Select image: <select id="select-img">
-                <optgroup class="image-type" label="Agriculture">
-                    <option>Baja_California_Mexico.jpg</option>
-                    <option>Palm_oil_plantations.jpg</option>
-                    <option>Ries_crater_Germany.jpg</option>
-                    <option>South_Kalimantan_Borneo.jpg</option>
-                    <option>Hereford_Texas.jpg</option>
-                    <option>Rice_fields_Vietnam.jpg</option>
-                    <option>Sindh_Pakistan.jpg</option>
-                    <option>Washington_US.jpg</option>
-                    </optgroup>
-                    <optgroup class="image-type" label="Coastal Zones">
-                    <option>Abu_Dhabi.jpg</option>
-                    <option>English_Channel.jpg</option>
-                    <option>San_Francisco_Bay.jpg</option>
-                    <option>Barranquilla_Colombia.jpg</option>
-                    <option>Gulf_of_Kutch_India.jpg</option>
-                    <option>Scandinavian_snows_highlight_std.jpg</option>
-                    <option>Bouches-du-Rhone_France.jpg</option>
-                    <option>Gulf_of_Taranto_Italy.jpg</option>
-                    <option>Western_Pakistan.jpg</option>
-                    <option>Clarence_Strait_Australia.jpg</option>
-                    <option>Montevideo_Uruguay.jpg</option>
-                    </optgroup>
-                    <optgroup class="image-type" label="Deserts">
-                    <option>Namib_Desert.jpg</option>
-                    <option>Namib_Desert_pillars.jpg</option>
-                    <option>Rub_al_Khali_desert_highlight_std.jpg</option>
-                    </optgroup>
-                    <optgroup class="image-type" label="Glaciers">
-                    <option>Glacier_Bay_Alaska.jpg</option>
-                    <option>Northwest_Greenland.jpg</option>
-                    <option>Vatnajoekull_Iceland.jpg</option>
-                    <option>Melt_Ponds_in_West_Greenland.jpg</option>
-                    <option>Svalbard.jpg</option>
-                    </optgroup>
-                    <optgroup class="image-type" label="Lakes">
-                    <option>Alberta_Canada.jpg</option>
-                    <option>Lake_Balkhash_Kazakhastan.jpg</option>
-                    <option>Lake_Trasimeno_Italy.jpg</option>
-                    <option>Lake_Balaton_Hungary.jpg</option>
-                    <option>Lake_Chad_s_shrinking_waters.gif</option>
-                    <option>Utah_s_Great_Salt_Lake.jpg</option>
-                    </optgroup>
-                    <optgroup class="image-type" label="Marine">
-                    <option>Ari_Atoll_Maldives.jpg</option>
-                    <option>Patagonia.jpg</option>
-                    <option>Earth_from_Space_Blooms_in_the_Gulf_of_Finland.jpg</option>
-                    <option>Queensland_floods.jpg</option>
-                    <option>Great_Bahamas_Bank.jpg</option>
-                    <option>Singapore.jpg</option>
-                    <option>Irminger_Sea_ice_swirl.jpg</option>
-                    <option>Tarawa_Kiribati.jpg</option>
-                    <option>New_Zealand.jpg</option>
-                    </optgroup>
-                    <optgroup class="image-type" label="Mountains">
-                    <option>Flinders_Ranges_South_Australia.jpg</option>
-                    <option>Snowy_Pyrenees.jpg</option>
-                    <option>Ulan_Bator_Mongolia.jpg</option>
-                    <option>Peruvian_Andes.jpg</option>
-                    <option>The_Alps.jpg</option>
-                    </optgroup>
-                    <optgroup class="image-type" label="Rivers">
-                    <option>Amazon_River.jpg</option>
-                    <option>Earth_from_Space_Bentiu_South_Sudan.jpg</option>
-                    <option>Meeting_of_waters.jpg</option>
-                    <option>Cambodian_rivers.jpg</option>
-                    <option>Ganges_dazzling_delta_pillars.jpg</option>
-                    <option>Mississippi_River.jpg</option>
-                    <option>Colourful_Queensland_Australia.jpg</option>
-                    <option>Lena_River_Delta.jpg</option>
-                    <option>Nushagak_Bay_Alaska.jpeg</option>
-                    </optgroup>
-                    <optgroup class="image-type" label="Urban">
-                    <option>Barcelona_Spain.jpg</option>
-                    <option>Earth_from_Space_New_York.jpg</option>
-                    <option>New_York_City.jpg</option>
-                    <option>Bonn_Germany.jpg</option>
-                    <option>Milan_Italy.jpg</option>
-                    <option>Santiago_Chile.jpg</option>
-                    <option>Brussels.jpg</option>
-                    <option>Nairobi_Kenya.jpg</option>
-                    <option>Tokyo_Bay_Japan.jpg</option>
-                    </optgroup>
-                    <optgroup class="image-type" label="Volcanoes">
-                    <option>Castelli_Romani_Italy.jpg</option>
-                    <option>East_Bali_Indonesia.jpg</option>
-                    <option>Mount_Aso_Japan.jpg</option>
-                    <option>Mount_Fuji_Japan.jpg</option>
-                    </optgroup>
-
+                <option value="">-- Select an image --</option>
+                <optgroup label="Coastal Zones">
+                    <option value="images-arteo/Coastal Zones/Long-Island-Bahamas.jpg">Long-Island-Bahamas</option>
+                    <option value="images-arteo/Coastal Zones/MackenzieRiver.jpg">MackenzieRiver</option>
+                    <option value="images-arteo/Coastal Zones/Photosynthetic pigments by land and sea.jpg">Photosynthetic pigments by land and sea</option>
+                    <option value="images-arteo/Coastal Zones/suwannee_blackriver1-2400x2400-90.jpg">Suwannee Black River</option>
+                </optgroup>
+                <optgroup label="Desert">
+                    <option value="images-arteo/Desert/1985 Sea-of-sand-July.jpg">1985 Sea-of-sand-July</option>
+                    <option value="images-arteo/Desert/Geologic-delight-February2013.jpg">Geologic-delight-February2013</option>
+                    <option value="images-arteo/Desert/landsat_art_kevir_1920x1200.jpg">Kevir</option>
+                    <option value="images-arteo/Desert/landsat_art_terkezi_lrg.jpg">Terkezi</option>
+                </optgroup>
+                <optgroup label="Glaciers">
+                    <option value="images-arteo/Glaciers/Alaskan shimmer.jpg">Alaskan shimmer</option>
+                    <option value="images-arteo/Glaciers/Icefall_June-2014-1920x1200.jpg">Icefall June 2014</option>
+                    <option value="images-arteo/Glaciers/landsat_art_greenland_lrg.jpg">Greenland</option>
+                </optgroup>
+                <optgroup label="Lakes">
+                    <option value="images-arteo/Lakes/Tibetan-depths_1920x1200-94.jpg">Tibetan depths</option>
+                    <option value="images-arteo/Lakes/landsat_art_carnegie_lrg.jpg">Carnegie</option>
+                    <option value="images-arteo/Lakes/landsat_art_dragon_lrg.jpg">Dragon</option>
+                </optgroup>
+                <optgroup label="Marine">
+                    <option value="images-arteo/Marine/ Summer blooms in the Baltic.jpg">Summer blooms in the Baltic</option>
+                    <option value="images-arteo/Marine/Blue_Lagoon-June-2013.jpg">Blue Lagoon June 2013</option>
+                    <option value="images-arteo/Marine/Churning in the Chukchi Sea.jpg">Churning in the Chukchi Sea</option>
+                    <option value="images-arteo/Marine/Foxe Basin Ice Stars.jpeg">Foxe Basin Ice Stars</option>
+                    <option value="images-arteo/Marine/Patagonia-blooms.jpg">Patagonia blooms</option>
+                    <option value="images-arteo/Marine/Phytoplankton-bloom.jpg">Phytoplankton bloom</option>
+                    <option value="images-arteo/Marine/Ship-Tracks_1920x1200-91.jpg">Ship Tracks</option>
+                    <option value="images-arteo/Marine/The-Maldives.jpg">The Maldives</option>
+                    <option value="images-arteo/Marine/Van-Gogh-from-space_1920x1200-97.jpg">Van Gogh from space</option>
+                </optgroup>
+                <optgroup label="Meteorology">
+                    <option value="images-arteo/Meteorology/Extraordinary-eddies_March.jpg">Extraordinary eddies March</option>
+                    <option value="images-arteo/Meteorology/landsat_art_aleutian_1900x1200.jpg">Aleutian</option>
+                    <option value="images-arteo/Meteorology/landsat_art_whirlpool_lrg.jpg">Whirlpool</option>
+                </optgroup>
+                <optgroup label="Mountains">
+                    <option value="images-arteo/Mountains/The-Himalayas-May2014.jpg">The Himalayas May 2014</option>
+                    <option value="images-arteo/Mountains/landsat_art_atlas_1900x1200-75.jpg">Atlas</option>
+                </optgroup>
+                <optgroup label="Rivers">
+                    <option value="images-arteo/Rivers/Bombetoka_Bay_1920x1200-81.jpg">Bombetoka Bay</option>
+                    <option value="images-arteo/Rivers/Georgia patchwork_1920x1200-85.jpg">Georgia patchwork</option>
+                    <option value="images-arteo/Rivers/Kuskokwim River.jpg">Kuskokwim River</option>
+                    <option value="images-arteo/Rivers/Meandering Mississippi_1920x1200-87.jpg">Meandering Mississippi</option>
+                    <option value="images-arteo/Rivers/Parana-River-Argentina.jpg">Parana River Argentina</option>
+                    <option value="images-arteo/Rivers/The heart of Madagascar.jpg">The heart of Madagascar</option>
+                    <option value="images-arteo/Rivers/The wild, frozen Dnieper River.jpg">The wild, frozen Dnieper River</option>
+                    <option value="images-arteo/Rivers/landsat_art_ghadamis_lrg.jpg">Ghadamis</option>
+                </optgroup>
+                <optgroup label="Urban">
+                    <option value="images-arteo/Urban/Walled-off_1920x1200-99.jpg">Walled-off</option>
+                </optgroup>
             </select>
-            -->
-            Avg area size: <input type="number" id="areaSize" min="1" placeholder="1" value="1">
+            <!-- Avg area size: -->
+            <input type="hidden" id="areaSize" min="1" placeholder="1" value="1">
             <div id="palette-container">
                 Scanned color:
                 <table id="palette">
@@ -275,205 +133,10 @@
     <div id="hoveredColor" style="position: fixed; top: 0; left: 0; width: 50px; height: 50px;"></div>
     <div id="averageColor" style="position: fixed; top: 60px; left: 0; width: 50px; height: 50px;"></div>
     -->
-    <script src="colorConvert.min.js"></script>
-    <script src="color-thief.min.js"></script>
-    <script src="Tone.js"></script>
-    <script>
-
-var numWaves = 8;
-var offset = [0, 0];
-var picker = document.getElementById('picker');
-
-let row = document.getElementById("palette-row");
-for (let i = 0; i < numWaves; i++) {
-    let cell = row.insertCell(-1);
-    cell.className = "paletteColor";
-    cell.id = "color-" + (i);
-}
-
-// Get all optgroups
-let optgroups = document.querySelectorAll('.image-type');
-
-// Iterate over each optgroup
-for (let i = 0; i < optgroups.length; i++) {
-    let label = optgroups[i].label;
-
-    // Get all options within the current optgroup
-    let options = optgroups[i].getElementsByTagName('option');
-
-    // Iterate over each option
-    for (let j = 0; j < options.length; j++) {
-        // Set the value attribute
-        options[j].value = "images/ArtEO/" + label + "/" + options[j].innerText;
-    }
-}
-
-document.body.addEventListener('mousemove', function(e) {
-    e.preventDefault();
-});
-
-document.getElementById('areaSize').addEventListener('change', function(e) {
-    var areaSize = parseInt(this.value);
-    console.log(areaSize);
-    //picker.style.width = areaSize + "px";
-    //picker.style.height = areaSize + "px";
-}); 
-
-document.getElementById('imageUpload').addEventListener('change', function(e) {
-    var reader = new FileReader();
-    reader.onload = function(event) {
-        var img = new Image();
-        img.setAttribute('id', 'img');
-        img.onload = function() {
-            //document.getElementById("form1").style.display = "none";
-            document.getElementById('imageContainer').innerHTML = '';
-            document.getElementById('imageContainer').appendChild(img);
-
-            var canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            var context = canvas.getContext('2d', { willReadFrequently: true });
-            context.drawImage(img, 0, 0, img.width, img.height);
-
-
-            
-            var isDragging = false;
-            img.addEventListener('mousedown', function(e) {
-                e.preventDefault();
-                isDragging = true;
-                //picker.style.display = "block";
-                img.style.cursor  = "crosshair";
-                pickerPosition(e);
-            });
-
-            img.addEventListener('mouseup', function(e) {
-                isDragging = false;
-                rOsc.volume.rampTo(-100, 2);
-                //picker.style.display = "none";
-                img.style.cursor = "auto";
-            });
-
-            img.addEventListener("mouseleave", function(e) {
-                rOsc.volume.rampTo(-100, 2);
-            });
-
-            const reverb = new Tone.Reverb().toDestination();
-            reverb.wet.value = 0.5;
-            var rOsc = new Tone.Oscillator(0, "triangle4").connect(reverb).start();
-
-            img.addEventListener('mousemove', function(e) {
-                if (!isDragging) return;
-                e.preventDefault();
-                var {rgb, hsl} = getColorData(context, e, this);
-                var [frequency, volume, attack, filterF] = hsl2osc(hsl);
-                rOsc.frequency.rampTo(frequency);
-                rOsc.volume.rampTo( 20*Math.log10(volume/2), 0.1 );
-                pickerPosition(e);
-                console.log(this.offsetTop);
-            });
-
-            document.addEventListener('mousemove', function(e) {
-                if (!isDragging) return;
-                
-            });
-
-            const colorThief = new ColorThief();
-            //const img = document.querySelector('img');
-
-            var domColor = colorThief.getColor(img);
-            var palette = colorThief.getPalette(img, numWaves);
-            for (var i = 0; i < palette.length; i++) {
-                document.getElementById('color-' + i).style.backgroundColor = 'rgb(' + palette[i][0] + ',' + palette[i][1] + ',' + palette[i][2] + ')';
-                var hslTmp = colorConvert.rgb2hsl(palette[i][0], palette[i][1], palette[i][2]);
-                var [frequency, volume, attack, filterF] = hsl2osc(hslTmp);
-                ambOsc[i].frequency.value = frequency/2;
-                ambOsc[i].volume.rampTo( 20*Math.log10(volume/(numWaves*1.5)) , 2) ;
-                ambOsc[i].start();
-            }
-        }
-        img.src = event.target.result;
-    }
-    reader.readAsDataURL(e.target.files[0]);
-});
-
-function pickerPosition(e) {
-    var x = e.offsetX;
-    var y = e.offsetY;
-    picker.style.left = (x) + 'px';
-    picker.style.top  = (y) + 'px';
-}
-
-function mapNumber(number, inMin, inMax, outMin, outMax) {
-    return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-}
-
-function getColorData(context, e, img) {
-                
-    var pixelData = context.getImageData(e.offsetX, e.offsetY, 1, 1).data;
-    
-    var areaSize = parseInt(document.getElementById('areaSize').value);
-    var totalR = 0, totalG = 0, totalB = 0, totalA = 0, totalPixels = 0;
-    for (var y = Math.max(0, e.offsetY - areaSize); y <= Math.min(img.height - 1, e.offsetY + areaSize); y++) {
-        for (var x = Math.max(0, e.offsetX - areaSize); x <= Math.min(img.width - 1, e.offsetX + areaSize); x++) {
-            var areaPixelData = context.getImageData(x, y, 1, 1).data;
-            totalR += areaPixelData[0];
-            totalG += areaPixelData[1];
-            totalB += areaPixelData[2];
-            totalA += areaPixelData[3];
-            totalPixels++;
-        }
-    }
-    var pixelColor = 'rgba(' + pixelData[0] + ',' + pixelData[1] + ',' + pixelData[2] + ',' + pixelData[3] + ')';
-    var averageColor = 'rgba(' + Math.round(totalR / totalPixels) + ',' + Math.round(totalG / totalPixels) + ',' + Math.round(totalB / totalPixels) + ',' + Math.round(totalA / totalPixels) + ')';
-    document.getElementById('hoveredColor').style.backgroundColor = pixelColor;
-    document.getElementById('averageColor').style.backgroundColor = averageColor;
-    document.getElementById('picker').style.backgroundColor = averageColor;
-    var rgb = [parseInt(totalR / totalPixels), parseInt(totalG / totalPixels), parseInt(totalB / totalPixels)];
-    var cc = window.colorConvert;
-    var hsl = cc.rgb2hsl(totalR / totalPixels, totalG / totalPixels, totalB / totalPixels);
-    return({rgb: rgb, hsl: hsl});
-}
-
-function hsl2osc(hsl) {
-    const pitches = [16.35, 17.32, 18.35, 19.45, 20.60, 21.83, 23.12, 24.50, 25.96, 27.50, 29.14, 30.87, 32.70];
-    var pitch = pitches[Math.round(hsl[0]/30)];
-    var octIndex = Math.floor((hsl[1]/25));
-    var oct = Math.pow(2, octIndex)*4*Math.sign(hsl[1]);
-    return [pitch*oct, hsl[2]/100, 0.1, 10000];
-}
-
-var ambOsc = [];
-for (var i = 0; i < numWaves; i++) {
-    const tremolo = new Tone.Tremolo(9, 1).toDestination().start();    
-    tremolo.spread.value = 180;
-    tremolo.frequency.value = 0.01*(Math.pow(2, i));
-	ambOsc[i] = new Tone.Oscillator(0, "triangle8").connect(tremolo);
-    ambOsc[i].volume.value = -100;
-}
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    const helpPopup = document.getElementById('helpPopup');
-    const showHelpButton = document.getElementById('showHelp');
-    const closePopupButton = document.getElementById('closePopup');
-
-    function showHelp() {
-        helpPopup.style.display = 'block';
-    }
-
-    function hideHelp() {
-        helpPopup.style.display = 'none';
-    }
-
-    showHelpButton.addEventListener('click', showHelp);
-    closePopupButton.addEventListener('click', hideHelp);
-
-    window.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            hideHelp();
-        }
-    });
-});
-
-    </script>
+    <script src="js/colorConvert.min.js"></script>
+    <script src="js/color-thief.min.js"></script>
+    <script src="js/Tone.js"></script>
+    <script src="js/help.js"></script>
+    <script src="js/scripts.js"></script>
 </body>
 </html>
