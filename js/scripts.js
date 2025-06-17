@@ -225,3 +225,51 @@ function loadRandomImage() {
 window.addEventListener('load', function() {
     loadRandomImage();
 });
+
+/**
+ * Loads the next image from the dropdown list
+ * If the last image is currently selected, it will loop back to the first image
+ */
+function loadNextImage() {
+    // Get the select element
+    const selectElement = document.getElementById('select-img');
+    
+    // Get all option elements that have a value (exclude the default "Select an image" option)
+    const options = Array.from(selectElement.querySelectorAll('option'))
+        .filter(option => option.value && option.value.trim() !== '');
+    
+    // If there are no valid options, return
+    if (options.length === 0) {
+        console.error('No images available in the dropdown');
+        return;
+    }
+    
+    // Find the index of the currently selected option
+    const currentIndex = options.findIndex(option => option.value === selectElement.value);
+    
+    // Calculate the index of the next option, looping back to the beginning if needed
+    const nextIndex = (currentIndex >= 0 && currentIndex < options.length - 1) ? currentIndex + 1 : 0;
+    const nextOption = options[nextIndex];
+    
+    // Set the select value to the next option
+    selectElement.value = nextOption.value;
+    
+    // Create and load the image
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // To avoid CORS issues
+    img.onload = function() {
+        processLoadedImage(img);
+    };
+    img.onerror = function() {
+        console.error('Error loading image:', nextOption.value);
+    };
+    img.src = nextOption.value;
+    
+    console.log('Loading next image:', nextOption.value);
+}
+
+// Add event listener for the next image button
+document.getElementById('next-image').addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent form submission
+    loadNextImage();
+});
