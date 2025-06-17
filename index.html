@@ -11,7 +11,8 @@
         <div class="help-content">
             <span id="closePopup" class="close-button">&times;</span>
             <p>
-                <h4>About SynthEO</h4>
+                <h2>About SynthEO</h2>
+                <!--
                 SynthEO is an image sonifier, meant to be used with images from ArtEO. You can find them here:
                 <ul>
                     <li>URL: <a href="https://www.arteo.earth/curated-data---pioneers-collection" target="_blank">ArtEO Pioneers Collection</a></li>
@@ -21,14 +22,17 @@
                 <br/>
                 <br/>
                 Upon image load, a palette of its 8 most common colors is extracted, and each color is assigned a sine wave oscillator to create a soundscape or "sound signature". You can also drag the cursor over the image to "play it".
+            -->
             </p>
             <p>
-                <h4>Color to sound mapping (simplified)</h4>
+                <h3>Color to sound mapping (simplified)</h3>
                 Colors are transformed into the HSL space. The frequency of the oscillator is determined by the hue of the color (hue = note, saturation = octave),
                 and the volume by the lightness.
             </p>
             <p>
-                <h4>Credits</h4>
+                <h3>Credits</h3>
+                All images by NASA’s Earth Observatory.
+                <br/>
                 <img src="images/arteo-logo.png" id="arteo-logo">
                 Supported by ArtEO / <a href="https://www.arteo.earth/" target="_blank">www.arteo.earth</a>
                 <br/>
@@ -42,11 +46,14 @@
         </div>
     </div>
 
-    <div id="picker" class="paletteColor pickers"></div>
+    <div id="picker" class="palette-color pickers"></div>
     <div id="tools">
-        <button id="showHelp">Help/About</button>
         <form id="form1">
+            <button id="show-help">i</button>
+            <!--
             <input type="file" id="imageUpload" accept="image/*">
+            -->
+            <input type="hidden" id="imageUpload" accept="image/*">
             Select image: <select id="select-img">
                 <option value="">-- Select an image --</option>
                 <optgroup label="Coastal Zones">
@@ -107,27 +114,23 @@
             </select>
             <!-- Avg area size: -->
             <input type="hidden" id="areaSize" min="1" placeholder="1" value="1">
-            <div id="palette-container">
-                Scanned color:
-                <table id="palette">
-                    <tr>
-                        <td id="hoveredColor" class="paletteColor pickers">Pt</td>
-                        <td id="averageColor" class="paletteColor pickers">Avg</td>
-                    </tr>
-                </table>
-
-                <table id="palette">
-                    <tr id="palette-row">
-                        <td class="paletteColor"></td>
-                        <td class="paletteColor"></td>
-                        <td class="paletteColor"></td>
-                        <td class="paletteColor"></td>
-                    </tr>
-                </table>
-            </div>
         </form>
+        <div id="palette-container">
+            <table class="palette-table">
+                <tr>
+                    <td>Scanned color:</td>
+                    <td id="hoveredColor" class="palette-color pickers">Pt</td>
+                    <td id="averageColor" class="palette-color pickers hidden">Avg</td>
+                </tr>
+            </table>
+            <table class="palette-table">
+                <tr id="palette-row">
+                    <td>Image palette:</td>
+                </tr>
+            </table>
+        </div>
     </div>
-    <div id="imageContainer">
+    <div id="image-container">
     </div>
     <!--
     <div id="hoveredColor" style="position: fixed; top: 0; left: 0; width: 50px; height: 50px;"></div>

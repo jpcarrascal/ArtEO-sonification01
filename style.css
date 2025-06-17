@@ -1,4 +1,10 @@
 /* Main styles for ArtEO sonification */
+:root {
+    --bgcolor: rgb(13, 13, 13);
+    --maincolor: rgb(207, 207, 207);
+    --bordercolor: var(--maincolor);
+}
+
 body {
     top: 0;
     bottom: 0;
@@ -8,11 +14,11 @@ body {
     height: 100%;
     font-family: Lexend, Arial, sans-serif;
     font-size: small;
-    background-color: #333;
-    color: rgb(207, 207, 207);
+    background-color: var(--bgcolor);
+    color: var(--maincolor);
 }
 
-#imageContainer {
+#image-container {
     position: relative;
     top: 80px;
     width: 100%;
@@ -33,22 +39,30 @@ body {
     margin: 10px;
 }
 
-.paletteColor {
+.palette-color {
     width: 30px;
     height: 30px;
+}
+
+.palette-table {
+    margin-left: 10px
 }
 
 .pickers {
     border-radius: 30px;
     text-align: center;
-    color: rgb(207, 207, 207);
-    border: 2px solid lightgrey;
+    color: var(--maincolor);
+    border: 2px solid var(--maincolor);
+    margin: 20px;
 }
 
 #tools {
     position: fixed;
-    background-color: #222;
-    color: rgb(207, 207, 207);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: var(--bgcolor);
+    color: var(--maincolor);
     width: 100%;
     z-index: 2;
 }
@@ -59,7 +73,7 @@ body {
     left: 100px;
     top: 200px;
     z-index: 10;
-    border-color: rgb(207, 207, 207);
+    border-color: var(--bordercolor);
 }
 
 #form1 {
@@ -76,29 +90,36 @@ body {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(13, 13, 13, 0.85); /* Using the bgcolor with transparency */
 }
 
 .help-content {
-    background-color: #000;
+    background-color: var(--bgcolor);
     margin: 10% auto;
     padding: 20px;
-    border: 1px solid #888;
-    color: rgb(207, 207, 207);
+    color: var(--maincolor);
     width: 80%;
     max-width: 600px;
 }
 
 .help-popup a:link {
-    color: rgb(0, 119, 204);
+    color: var(--maincolor);
+    font-weight: bold;
+    text-decoration: underline;
 }
 
 .help-popup a:visited {
-    color: rgb(0, 119, 204);
+    color: var(--maincolor);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.hidden {
+    display: none;
 }
 
 .close-button {
-    color: rgb(207, 207, 207);
+    color: var(--maincolor);
     float: right;
     font-size: 28px;
     font-weight: bold;
@@ -106,7 +127,7 @@ body {
 
 .close-button:hover, 
 .close-button:focus {
-    color: black;
+    opacity: 0.7;
     text-decoration: none;
     cursor: pointer;
 }
@@ -120,6 +141,45 @@ body {
     display: block;
 }
 
-button {
+button, select, input {
     font-family: Lexend, Arial, sans-serif;
+    background-color: var(--bgcolor);
+    color: var(--maincolor);
+    border: 2px solid var(--maincolor);
+    padding: 5px;
+    margin: 20px;
+    border-radius: 30px;
+    min-width: 30px;
+}
+
+button:hover {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+/* General link styling */
+a:link, a:visited {
+    color: var(--maincolor);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+/* Media Queries */
+@media screen and (max-width: 1050px) {
+    #tools {
+        flex-direction: column;
+        padding: 10px 0;
+    }
+    
+    #palette-container {
+        margin-top: -10px;
+    }
+    
+    #image-container {
+        top: 120px; /* Adjust top margin to account for taller header */
+    }
 }

@@ -5,7 +5,7 @@ var picker = document.getElementById('picker');
 let row = document.getElementById("palette-row");
 for (let i = 0; i < numWaves; i++) {
     let cell = row.insertCell(-1);
-    cell.className = "paletteColor";
+    cell.className = "palette-color";
     cell.id = "color-" + (i);
 }
 
@@ -119,12 +119,13 @@ for (var i = 0; i < numWaves; i++) {
     ambOsc[i].volume.value = -100;
 }
 
-// Help popup functionality is moved to help.js
+// Help popup functionality moved to help.js
 
 // Process loaded image function - to be used by both file upload and dropdown selection
 function processLoadedImage(img) {
-    document.getElementById('imageContainer').innerHTML = '';
-    document.getElementById('imageContainer').appendChild(img);
+    console.log('Processing image:', img.src);
+    document.getElementById('image-container').innerHTML = '';
+    document.getElementById('image-container').appendChild(img);
 
     var canvas = document.createElement('canvas');
     canvas.width = img.width;
@@ -140,6 +141,7 @@ function processLoadedImage(img) {
     imgOsc.volume.value = -100; // Start silent
     
     img.addEventListener('mousedown', function(e) {
+        Tone.start();
         e.preventDefault();
         isDragging = true;
         img.style.cursor = "crosshair";
@@ -183,3 +185,43 @@ function processLoadedImage(img) {
         ambOsc[i].start();
     }
 }
+
+function loadRandomImage() {
+    // Get the select element
+    const selectElement = document.getElementById('select-img');
+    
+    // Get all option elements that have a value (exclude the default "Select an image" option)
+    const options = Array.from(selectElement.querySelectorAll('option'))
+        .filter(option => option.value && option.value.trim() !== '');
+    
+    // If there are no valid options, return
+    if (options.length === 0) {
+        console.error('No images available in the dropdown');
+        return;
+    }
+    
+    // Select a random option from the list
+    const randomIndex = Math.floor(Math.random() * options.length);
+    const randomOption = options[randomIndex];
+    
+    // Set the select value to the random option
+    selectElement.value = randomOption.value;
+    
+    // Create and load the image
+    const img = new Image();
+    img.crossOrigin = "anonymous"; // To avoid CORS issues
+    img.onload = function() {
+        processLoadedImage(img);
+    };
+    img.onerror = function() {
+        console.error('Error loading image:', randomOption.value);
+    };
+    img.src = randomOption.value;
+    
+    console.log('Loading random image:', randomOption.value);
+}
+
+// Load a random image from the dropdown on page load
+window.addEventListener('load', function() {
+    loadRandomImage();
+});

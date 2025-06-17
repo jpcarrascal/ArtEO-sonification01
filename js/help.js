@@ -1,7 +1,7 @@
 // Help popup functionality
 document.addEventListener('DOMContentLoaded', (event) => {
     const helpPopup = document.getElementById('helpPopup');
-    const showHelpButton = document.getElementById('showHelp');
+    const showHelpButton = document.getElementById('show-help');
     const closePopupButton = document.getElementById('closePopup');
 
     function showHelp() {
@@ -9,11 +9,12 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
 
     function hideHelp() {
+        Tone.start();
         helpPopup.style.display = 'none';
     }
 
     // Show the popup on the first page load
-    if (!localStorage.getItem('helpPopupShown')) {
+    if (true) {//!localStorage.getItem('helpPopupShown')) {
         showHelp();
         localStorage.setItem('helpPopupShown', 'true');
     }
@@ -23,6 +24,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
     window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
+            Tone.start();
             hideHelp();
         }
     });
