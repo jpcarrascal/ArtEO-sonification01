@@ -1,3 +1,19 @@
+// Check if the audioSession API is available (iOS 17+)
+if ('audioSession' in navigator) {
+  try {
+    // Set the audio session type to 'playback'
+    // This will allow audio to play even when the device is on silent mode
+    navigator.audioSession.type = 'playback';
+    console.log('Audio session type set to playback');    
+    // You can also listen for changes to the audio session type
+    navigator.audioSession.addEventListener('typechange', () => {
+      console.log('Audio session type changed to:', navigator.audioSession.type);
+    });
+  } catch (error) {
+    console.error('Error setting audio session type:', error);
+  }
+}
+
 var numWaves = 8;
 var offset = [0, 0];
 var picker = document.getElementById('picker');
