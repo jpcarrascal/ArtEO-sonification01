@@ -12,6 +12,7 @@ html, body {
     padding: 0;
     width: 100%;
     height: 100%;
+    min-height: 100vh;
     font-family: Lexend, Arial, sans-serif;
     font-size: small;
     background-color: var(--bgcolor);
@@ -23,25 +24,15 @@ html, body {
     user-select: none; /* Standard syntax */
 }
 
-body {
-    top: 0;
-    bottom: 0;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    font-family: Lexend, Arial, sans-serif;
-    font-size: small;
-    background-color: var(--bgcolor);
-    color: var(--maincolor);
-}
-
 #image-container {
     position: relative;
     top: 80px;
     width: 100%;
     height: auto;
+    min-height: calc(100vh - 80px);
     touch-action: none;
+    display: flex;
+    justify-content: center;
 }
 
 #img {
@@ -49,6 +40,7 @@ body {
     height: auto;
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-tap-highlight-color: transparent; /* Remove the tap highlight */
+    object-fit: contain;
     z-index: 1;
 }
 
@@ -176,7 +168,7 @@ button, select, input {
     color: var(--maincolor);
     border: 2px solid var(--maincolor);
     padding: 5px;
-    margin: 20px;
+    margin: 10px;
     border-radius: 30px;
     min-width: 30px;
     padding-left: 10px;
@@ -218,7 +210,36 @@ a:hover {
 
 @media screen and (max-width: 700px) {
     #controls {
-        flex-wrap: wrap;
         padding: 10px 0;
+    }
+    #select-label {
+        display: none;
+    }
+
+    #select-img {
+        max-width: 200px;
+    }
+
+}
+
+/* Media query for portrait orientation */
+@media screen and (orientation: portrait) {
+    #image-container {
+        position: relative;
+        top: 80px;
+        width: 100%;
+        height: calc(100vh - 80px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+    
+    #img {
+        width: auto;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+        margin: 0 auto;
     }
 }

@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <audio id="mute-sound" src="audio/mute.wav" loop="true" preload="auto" autoplay></audio>
+
+    </audio>
+
     <div id="helpPopup" class="help-popup">
         <div class="help-content">
             <span id="closePopup" class="close-button">&times;</span>
@@ -56,7 +60,7 @@
                 <input type="file" id="imageUpload" accept="image/*">
                 -->
                 <input type="hidden" id="imageUpload" accept="image/*">
-                Select image: <select id="select-img">
+                <span id="select-label">Select image:</span> <select id="select-img">
                     <option value="">-- Select an image --</option>
                 </select>
                 <!-- Avg area size: -->
