@@ -9,24 +9,40 @@ for (let i = 0; i < numWaves; i++) {
     cell.id = "color-" + (i);
 }
 
-// Get all optgroups - Note: This code is not needed as values are already set in HTML
-/*
-let optgroups = document.querySelectorAll('optgroup');
-
-// Iterate over each optgroup
-for (let i = 0; i < optgroups.length; i++) {
-    let label = optgroups[i].label;
-
-    // Get all options within the current optgroup
-    let options = optgroups[i].getElementsByTagName('option');
-
-    // Iterate over each option
-    for (let j = 0; j < options.length; j++) {
-        // Set the value attribute
-        options[j].value = "images-arteo/" + label + "/" + options[j].innerText;
+// Populate the dropdown with image options from the active collection
+function populateImageDropdown() {
+    const selectElement = document.getElementById('select-img');
+    
+    // Clear any existing options except the first default option
+    while (selectElement.options.length > 1) {
+        selectElement.remove(1);
     }
+    
+    // Get the appropriate image paths based on the active collection
+    const activePaths = activeCollection === 'esa' ? esaImagePaths : nasaImagePaths;
+    const categories = imageCategories[activeCollection];
+    
+    // Add image options grouped by category
+    for (const category in categories) {
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = category;
+        
+        categories[category].forEach(path => {
+            const option = document.createElement('option');
+            option.value = path;
+            // Extract the filename from the path
+            const filename = path.split('/').pop().replace('.jpg', '').replace('.jpeg', '').replace('.gif', '');
+            option.textContent = filename.replace(/_/g, ' ');
+            optgroup.appendChild(option);
+        });
+        
+        selectElement.appendChild(optgroup);
+    }
+    
+    console.log(`Populated dropdown with ${activePaths.length} images from the ${activeCollection.toUpperCase()} collection`);
 }
-*/
+
+// Note: The dropdown is populated in the window.load event handler
 
 // Add event listener for the image selection dropdown
 document.getElementById('select-img').addEventListener('change', function(e) {
@@ -210,6 +226,7 @@ function loadRandomImage() {
     // Create and load the image
     const img = new Image();
     img.crossOrigin = "anonymous"; // To avoid CORS issues
+    img.setAttribute('id', 'img');
     img.onload = function() {
         processLoadedImage(img);
     };
@@ -223,6 +240,7 @@ function loadRandomImage() {
 
 // Load a random image from the dropdown on page load
 window.addEventListener('load', function() {
+    populateImageDropdown();
     loadRandomImage();
 });
 
@@ -257,6 +275,7 @@ function loadNextImage() {
     // Create and load the image
     const img = new Image();
     img.crossOrigin = "anonymous"; // To avoid CORS issues
+    img.setAttribute('id', 'img');
     img.onload = function() {
         processLoadedImage(img);
     };

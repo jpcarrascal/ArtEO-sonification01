@@ -1,0 +1,6 @@
+Coastal Zones Image Resize Report - Thu Jun 19 08:51:47 CEST 2025
+----------------------------------------
+images-arteo-esa/Coastal Zones/Gulf_of_Taranto_Italy.jpg: 3417 x 2000 (3.9M) -> 3417 x 2000 (3.9M)
+images-arteo-esa/Coastal Zones/Bouches-du-Rhone_France.jpg: 2984 x 2000 (3.6M) -> 2984 x 2000 (3.6M)
+images-arteo-esa/Coastal Zones/English_Channel.jpg: 4124 x 2000 (5.0M) -> 4124 x 2000 (5.0M)
+images-arteo-esa/Coastal Zones/Barranquilla_Colombia.jpg: 2000 x 2667 (3.3M) -> 2000 x 2667 (3.3M)

@@ -107,6 +107,7 @@ body {
     color: var(--maincolor);
     width: 80%;
     max-width: 600px;
+    border-radius: 10px;
 }
 
 .help-popup a:link {

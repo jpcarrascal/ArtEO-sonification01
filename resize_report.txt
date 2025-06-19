@@ -1,0 +1,80 @@
+Image Resize Report - Thu Jun 19 08:49:57 CEST 2025
+----------------------------------------
+images-arteo-esa/Agriculture/Ries_crater_Germany.jpg: 1865 x 1865 (6.2M) -> 1865 x 1865 (6.2M)
+----------------------------------------
+images-arteo-esa/Agriculture/Rice_fields_Vietnam.jpg: 2842 x 2000 (3.1M) -> 2842 x 2000 (3.1M)
+----------------------------------------
+images-arteo-esa/Agriculture/Sindh_Pakistan.jpg: 5444 x 4078 (5.6M) -> 2670 x 2000 (2.8M)
+----------------------------------------
+images-arteo-esa/Agriculture/Palm_oil_plantations.jpg: 3753 x 2544 ( 11M) -> 2950 x 2000 (1.8M)
+----------------------------------------
+images-arteo-esa/Agriculture/Baja_California_Mexico.jpg: 4047 x 5111 (7.9M) -> 2000 x 2526 (2.6M)
+----------------------------------------
+images-arteo-esa/Deserts/Namib_Desert.jpg: 10236 x 8337 (8.3M) -> 2455 x 2000 (1.5M)
+----------------------------------------
+images-arteo-esa/Glaciers/Glacier_Bay_Alaska.jpg: 3556 x 2000 (3.5M) -> 3556 x 2000 (3.5M)
+----------------------------------------
+images-arteo-esa/Urban/Milan_Italy.jpg: 2537 x 2009 (8.8M) -> 2525 x 2000 (2.8M)
+----------------------------------------
+images-arteo-esa/Urban/Barcelona_Spain.jpg: 4133 x 3761 (9.5M) -> 2198 x 2000 (1.8M)
+----------------------------------------
+images-arteo-esa/Urban/Santiago_Chile.jpg: 9462 x 8118 ( 33M) -> 2331 x 2000 (1.9M)
+----------------------------------------
+images-arteo-esa/Urban/Earth_from_Space_New_York.jpg: 7769 x 5443 (7.9M) -> 2854 x 2000 (1.5M)
+----------------------------------------
+images-arteo-esa/Urban/Bonn_Germany.jpg: 5847 x 5847 ( 20M) -> 2000 x 2000 (2.1M)
+----------------------------------------
+images-arteo-esa/Coastal:  x  () ->  x  ()
+----------------------------------------
+Zones/Gulf_of_Taranto_Italy.jpg:  x  () ->  x  ()
+----------------------------------------
+images-arteo-esa/Coastal:  x  () ->  x  ()
+----------------------------------------
+Zones/Bouches-du-Rhone_France.jpg:  x  () ->  x  ()
+----------------------------------------
+images-arteo-esa/Coastal:  x  () ->  x  ()
+----------------------------------------
+Zones/English_Channel.jpg:  x  () ->  x  ()
+----------------------------------------
+images-arteo-esa/Coastal:  x  () ->  x  ()
+----------------------------------------
+Zones/Barranquilla_Colombia.jpg:  x  () ->  x  ()
+----------------------------------------
+images-arteo-esa/Marine/Queensland_floods.jpg: 6054 x 4583 (3.2M) -> 2642 x 2000 (568K)
+----------------------------------------
+images-arteo-esa/Marine/Irminger_Sea_ice_swirl.jpg: 2800 x 2800 (4.7M) -> 2000 x 2000 (868K)
+----------------------------------------
+images-arteo-esa/Marine/Earth_from_Space_Blooms_in_the_Gulf_of_Finland.jpg: 4000 x 3516 ( 15M) -> 2275 x 2000 (1.4M)
+----------------------------------------
+images-arteo-esa/Volcanoes/Mount_Fuji_Japan.jpg: 2472 x 2472 (4.0M) -> 2000 x 2000 (1.3M)
+----------------------------------------
+images-arteo-esa/Volcanoes/Castelli_Romani_Italy.jpg: 5630 x 4022 ( 13M) -> 2799 x 2000 (2.6M)
+----------------------------------------
+images-arteo-esa/Volcanoes/Mount_Aso_Japan.jpg: 3416 x 3416 ( 15M) -> 2000 x 2000 (1.8M)
+----------------------------------------
+images-arteo-esa/Volcanoes/East_Bali_Indonesia.jpg: 5471 x 4766 ( 22M) -> 2296 x 2000 (1.3M)
+----------------------------------------
+images-arteo-esa/Lakes/Lake_Balaton_Hungary.jpg: 10964 x 7805 ( 94M) -> 2809 x 2000 (2.2M)
+----------------------------------------
+images-arteo-esa/Lakes/Utah_s_Great_Salt_Lake.jpg: 15164 x 10980 ( 25M) -> 2762 x 2000 (2.0M)
+----------------------------------------
+images-arteo-esa/Lakes/Alberta_Canada.jpg: 1920 x 1080 (3.4M) -> 1920 x 1080 (3.4M)
+----------------------------------------
+images-arteo-esa/Lakes/Lake_Balkhash_Kazakhastan.jpg: 6851 x 6851 ( 20M) -> 2000 x 2000 (1.8M)
+----------------------------------------
+images-arteo-esa/Mountains/Flinders_Ranges_South_Australia.jpg: 8118 x 6150 ( 24M) -> 2640 x 2000 (2.5M)
+----------------------------------------
+images-arteo-esa/Mountains/The_Alps.jpg: 4676 x 4091 (5.4M) -> 2286 x 2000 (1.8M)
+----------------------------------------
+images-arteo-esa/Mountains/Snowy_Pyrenees.jpg: 5753 x 4704 ( 17M) -> 2446 x 2000 (2.6M)
+----------------------------------------
+images-arteo-esa/Rivers/Meeting_of_waters.jpg: 7816 x 6943 ( 27M) -> 2251 x 2000 (1.6M)
+----------------------------------------
+images-arteo-esa/Rivers/Mississippi_River.jpg: 5000 x 6651 ( 27M) -> 2000 x 2660 (2.4M)
+----------------------------------------
+images-arteo-esa/Rivers/Earth_from_Space_Bentiu_South_Sudan.jpg: 7495 x 4216 (6.6M) -> 3555 x 2000 (2.7M)
+----------------------------------------
+images-arteo-esa/Rivers/Amazon_River.jpg: 4000 x 2923 ( 16M) -> 2737 x 2000 (3.9M)
+----------------------------------------
+images-arteo-esa/Rivers/Lena_River_Delta.jpg: 2000 x 2437 (4.4M) -> 2000 x 2437 (4.4M)
+----------------------------------------
