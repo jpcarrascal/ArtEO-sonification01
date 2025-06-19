@@ -186,6 +186,8 @@ function processLoadedImage(img) {
     
     // Mouse events
     img.addEventListener('mousedown', function(e) {
+        // plays the mute-sound sound element:
+        document.getElementById('mute-sound').play();
         Tone.start();
         e.preventDefault();
         isDragging = true;
@@ -215,6 +217,7 @@ function processLoadedImage(img) {
     
     // Touch events for mobile devices
     img.addEventListener('touchstart', function(e) {
+        document.getElementById('mute-sound').play();
         Tone.start();
         e.preventDefault(); // Prevent default browser behavior
         isDragging = true;
