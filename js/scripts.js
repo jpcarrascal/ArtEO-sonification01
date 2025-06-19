@@ -56,9 +56,25 @@ document.getElementById('select-img').addEventListener('change', function(e) {
     }
 });
 
+// Global variable to track if user is currently dragging on an image
+var isDragging = false;
+
 document.body.addEventListener('mousemove', function(e) {
     e.preventDefault();
 });
+
+// Prevent default touch behavior on the body element when interacting with the app
+document.addEventListener('touchmove', function(e) {
+    if (isDragging) {
+        e.preventDefault();
+    }
+}, { passive: false });
+
+document.addEventListener('touchstart', function(e) {
+    if (e.target.id === 'img') {
+        e.preventDefault();
+    }
+}, { passive: false });
 
 document.getElementById('areaSize').addEventListener('change', function(e) {
     var areaSize = parseInt(this.value);
@@ -149,13 +165,26 @@ function processLoadedImage(img) {
     var context = canvas.getContext('2d', { willReadFrequently: true });
     context.drawImage(img, 0, 0, img.width, img.height);
     
-    var isDragging = false;
+    // Reset dragging state
+    isDragging = false;
     // Create a new oscillator for this image
     const reverb = new Tone.Reverb().toDestination();
     reverb.wet.value = 0.5;
     var imgOsc = new Tone.Oscillator(0, "triangle4").connect(reverb).start();
     imgOsc.volume.value = -100; // Start silent
     
+    // Function to convert touch events to mouse-like events for reuse
+    function touchToMouseEvent(e, element) {
+        if (!e.touches || e.touches.length === 0) return null;
+        const touch = e.touches[0];
+        const rect = element.getBoundingClientRect();
+        return {
+            offsetX: touch.clientX - rect.left,
+            offsetY: touch.clientY - rect.top
+        };
+    }
+    
+    // Mouse events
     img.addEventListener('mousedown', function(e) {
         Tone.start();
         e.preventDefault();
@@ -182,6 +211,43 @@ function processLoadedImage(img) {
         imgOsc.frequency.rampTo(frequency);
         imgOsc.volume.rampTo(20*Math.log10(volume/2), 0.1);
         pickerPosition(e);
+    });
+    
+    // Touch events for mobile devices
+    img.addEventListener('touchstart', function(e) {
+        Tone.start();
+        e.preventDefault(); // Prevent default browser behavior
+        isDragging = true;
+        const touchEvent = touchToMouseEvent(e, this);
+        if (touchEvent) {
+            pickerPosition(touchEvent);
+        }
+    });
+
+    img.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        isDragging = false;
+        imgOsc.volume.rampTo(-100, 2);
+    });
+    
+    img.addEventListener('touchcancel', function(e) {
+        e.preventDefault();
+        isDragging = false;
+        imgOsc.volume.rampTo(-100, 2);
+    });
+
+    img.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        e.preventDefault(); // Prevent default browser behavior
+        
+        const touchEvent = touchToMouseEvent(e, this);
+        if (touchEvent) {
+            var {rgb, hsl} = getColorData(context, touchEvent, this);
+            var [frequency, volume, attack, filterF] = hsl2osc(hsl);
+            imgOsc.frequency.rampTo(frequency);
+            imgOsc.volume.rampTo(20*Math.log10(volume/2), 0.1);
+            pickerPosition(touchEvent);
+        }
     });
 
     // Reset all ambient oscillators to silent

@@ -5,6 +5,24 @@
     --bordercolor: var(--maincolor);
 }
 
+html, body {
+    top: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font-family: Lexend, Arial, sans-serif;
+    font-size: small;
+    background-color: var(--bgcolor);
+    color: var(--maincolor);
+    touch-action: manipulation;
+    overscroll-behavior: none;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10+ */
+    user-select: none; /* Standard syntax */
+}
+
 body {
     top: 0;
     bottom: 0;
@@ -23,11 +41,14 @@ body {
     top: 80px;
     width: 100%;
     height: auto;
+    touch-action: none;
 }
 
 #img {
     width: 100%;
     height: auto;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-tap-highlight-color: transparent; /* Remove the tap highlight */
     z-index: 1;
 }
 
